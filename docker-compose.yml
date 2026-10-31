@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Optional local Prometheus time-series monitoring
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: soar_prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+  # Optional local Grafana OSS visualization
+  grafana:
+    image: grafana/grafana-oss:11.2.0
+    container_name: soar_grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+

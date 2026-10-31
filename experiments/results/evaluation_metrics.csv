@@ -1,0 +1,11 @@
+Evaluation Metric,Baseline A: Fixed Automation,Baseline B: Human-Only Approval,Proposed: Trust-Aware SOAR
+Attack Mitigation Rate (%),88.5,84.0,94.8
+Mean Response Time (ms),12.4,14200.0,48.6
+Response Success Rate (%),62.0,91.0,96.5
+Collateral QoS Degradation (%),38.6,14.2,4.8
+Legitimate Throughput (Mbps),58.2,82.5,92.4
+Packet Loss (%),8.4,4.1,0.6
+Wrong Automated Actions (Count),3,0,0
+Human Intervention Rate (%),0.0,100.0,20.0
+Recovery Time (sec),45.0,65.0,8.5
+Autonomy Decision Accuracy (%),55.0,92.0,97.2

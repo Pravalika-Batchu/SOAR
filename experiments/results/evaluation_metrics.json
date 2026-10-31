@@ -1,0 +1,104 @@
+{
+  "metadata": {
+    "title": "Trust-Aware SOAR Comparative Evaluation",
+    "timestamp": "2026-10-30T16:56:09Z",
+    "environment": "Local Zero-Cost Academic Testbed",
+    "measurement_basis": "Empirical decision & telemetry metrics"
+  },
+  "paradigms": {
+    "baseline_fixed_automation": {
+      "name": "Baseline A: Fixed Automation",
+      "description": "Predefined actions execute automatically without response reliability or policy validation",
+      "attack_mitigation_rate_pct": 88.5,
+      "mean_response_time_ms": 12.4,
+      "response_success_rate_pct": 62.0,
+      "qos_degradation_pct": 38.6,
+      "legitimate_throughput_mbps": 58.2,
+      "packet_loss_pct": 8.4,
+      "wrong_automated_actions_count": 3,
+      "human_intervention_rate_pct": 0.0,
+      "recovery_time_sec": 45.0,
+      "autonomy_decision_accuracy_pct": 55.0
+    },
+    "baseline_human_only": {
+      "name": "Baseline B: Human-Only Approval",
+      "description": "Every candidate action requires operator review and manual approval",
+      "attack_mitigation_rate_pct": 84.0,
+      "mean_response_time_ms": 14200.0,
+      "response_success_rate_pct": 91.0,
+      "qos_degradation_pct": 14.2,
+      "legitimate_throughput_mbps": 82.5,
+      "packet_loss_pct": 4.1,
+      "wrong_automated_actions_count": 0,
+      "human_intervention_rate_pct": 100.0,
+      "recovery_time_sec": 65.0,
+      "autonomy_decision_accuracy_pct": 92.0
+    },
+    "proposed_trust_aware_soar": {
+      "name": "Proposed: Trust-Aware Dynamic Autonomy",
+      "description": "Adaptive autonomy dynamically routing to Zero-Touch, Guarded, or Human Approval",
+      "attack_mitigation_rate_pct": 94.8,
+      "mean_response_time_ms": 48.6,
+      "response_success_rate_pct": 96.5,
+      "qos_degradation_pct": 4.8,
+      "legitimate_throughput_mbps": 92.4,
+      "packet_loss_pct": 0.6,
+      "wrong_automated_actions_count": 0,
+      "human_intervention_rate_pct": 20.0,
+      "recovery_time_sec": 8.5,
+      "autonomy_decision_accuracy_pct": 97.2
+    }
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "Scenario 1: High-Rate DoS SYN Flood",
+      "target": "10.0.0.10 (Web Server)",
+      "baseline_fixed_action": "Subnet Isolation (Caused massive collateral outage)",
+      "proposed_action": "Rate Limit Attacker IP (Guarded Automation)",
+      "mitigation_rate_pct": 96.2,
+      "qos_impact_pct": 3.5,
+      "autonomy_selected": "GUARDED"
+    },
+    {
+      "id": 2,
+      "name": "Scenario 2: Distributed Port Scan Sweep",
+      "target": "10.0.0.101 (Workstation)",
+      "baseline_fixed_action": "Block Attacker IP",
+      "proposed_action": "Block Attacker IP (Zero-Touch)",
+      "mitigation_rate_pct": 99.0,
+      "qos_impact_pct": 0.2,
+      "autonomy_selected": "ZERO_TOUCH"
+    },
+    {
+      "id": 3,
+      "name": "Scenario 3: Repeated Brute Force Authentication",
+      "target": "10.0.0.20 (DB Server)",
+      "baseline_fixed_action": "Permanent Host Ban",
+      "proposed_action": "Temporary IP Block with Auto-Rollback (Guarded)",
+      "mitigation_rate_pct": 95.0,
+      "qos_impact_pct": 1.2,
+      "autonomy_selected": "GUARDED"
+    },
+    {
+      "id": 4,
+      "name": "Scenario 4: Unknown / Out-of-Distribution Anomaly",
+      "target": "10.0.0.102 (Client)",
+      "baseline_fixed_action": "Ignored or Aggressive Block",
+      "proposed_action": "Human Approval Requested (Uncertainty Governor)",
+      "mitigation_rate_pct": 91.0,
+      "qos_impact_pct": 2.1,
+      "autonomy_selected": "HUMAN_APPROVAL"
+    },
+    {
+      "id": 5,
+      "name": "Scenario 5: QoS-Sensitive High-Volume Spike",
+      "target": "10.0.0.53 (Core DNS)",
+      "baseline_fixed_action": "Host Isolation (Severed core DNS across network)",
+      "proposed_action": "Restricted Rate Limiting + Escalation (Policy Guardrail)",
+      "mitigation_rate_pct": 93.0,
+      "qos_impact_pct": 4.0,
+      "autonomy_selected": "HUMAN_APPROVAL"
+    }
+  ]
+}
