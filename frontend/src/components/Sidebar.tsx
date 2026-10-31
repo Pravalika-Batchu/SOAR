@@ -9,7 +9,8 @@ import {
   CheckCircle2, 
   History, 
   Scale, 
-  Network 
+  Network,
+  Radio
 } from 'lucide-react';
 
 export type PageId = 
@@ -22,7 +23,8 @@ export type PageId =
   | 'outcomes'
   | 'experience'
   | 'policies'
-  | 'topology';
+  | 'topology'
+  | 'simulation';
 
 interface SidebarProps {
   activePage: PageId;
@@ -51,6 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'experience' as PageId, label: 'Experience Memory', icon: History },
     { id: 'policies' as PageId, label: 'Policy Rules', icon: Scale },
     { id: 'topology' as PageId, label: 'Network Topology', icon: Network },
+    { id: 'simulation' as PageId, label: 'Simulation Control', icon: Radio },
   ];
 
   return (

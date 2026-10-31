@@ -148,7 +148,11 @@ class IncidentOrchestrationService:
             for r in active_rules
         ]
 
-        # Purge any old candidates for fresh evaluation
+        # Purge any old candidates and obsolete pending approvals for fresh evaluation
+        db.query(HumanApproval).filter(
+            HumanApproval.incident_id == incident.id,
+            HumanApproval.status == "PENDING"
+        ).delete()
         db.query(CandidateResponse).filter(CandidateResponse.incident_id == incident.id).delete()
         db.commit()
 

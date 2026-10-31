@@ -28,6 +28,7 @@ class CandidateResponseSchema(BaseModel):
 
 class HumanApprovalRequest(BaseModel):
     operator_comment: Optional[str] = None
+    auto_execute: Optional[bool] = True
 
 class HumanApprovalResponse(BaseModel):
     id: int

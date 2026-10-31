@@ -7,11 +7,17 @@ from app.api import (
     auth, alerts, incidents, responses, policies, 
     approvals, trust, outcomes, experience, metrics, system
 )
+from app.api import simulation
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    # Auto-start simulation engine on startup for live demo
+    from app.services.network_simulator import network_simulator
+    network_simulator.start()
     yield
+    # Graceful shutdown
+    network_simulator.stop()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -41,11 +47,13 @@ app.include_router(trust.router, prefix=settings.API_V1_PREFIX)
 app.include_router(outcomes.router, prefix=settings.API_V1_PREFIX)
 app.include_router(experience.router, prefix=settings.API_V1_PREFIX)
 app.include_router(metrics.router, prefix=settings.API_V1_PREFIX)
+app.include_router(simulation.router, prefix=settings.API_V1_PREFIX)
 
 @app.get("/")
 def root():
     return {
         "message": "Trust-Aware SOAR Decision & Autonomy Platform",
         "docs": "/docs",
-        "health": f"{settings.API_V1_PREFIX}/health"
+        "health": f"{settings.API_V1_PREFIX}/health",
+        "simulation": f"{settings.API_V1_PREFIX}/simulation/status"
     }

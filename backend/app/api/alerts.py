@@ -39,6 +39,19 @@ def create_alert(alert_in: AlertCreate, db: Session = Depends(get_db)):
         alert.incident_id = existing_incident.id
         db.commit()
     else:
+        # ML-based threat confidence from alert raw_payload
+        from app.ml.features import extract_features_from_raw_flow
+        from app.ml.model import detector
+        raw = alert_in.raw_payload or {}
+        feat = extract_features_from_raw_flow(raw)
+        pred = detector.predict(feat)
+        
+        base_confidence = {
+            "DOS_SYN_FLOOD": 0.82, "PORT_SCAN": 0.78, "BRUTE_FORCE": 0.80,
+            "DNS_AMPLIFICATION_FLOOD": 0.88, "UNKNOWN_ANOMALY": 0.60
+        }.get(alert.alert_type, 0.65)
+        ml_confidence = round(float(0.5 * base_confidence + 0.5 * pred.normalized_anomaly_score), 4)
+
         # Create a new incident
         new_incident = Incident(
             title=f"{alert.alert_type.replace('_', ' ').title()} from {alert.source_ip}",
@@ -48,8 +61,8 @@ def create_alert(alert_in: AlertCreate, db: Session = Depends(get_db)):
             source_ip=alert.source_ip,
             destination_ip=alert.destination_ip,
             protocol=alert.protocol,
-            threat_confidence=0.75 if alert.source in ["SURICATA", "ZEEK"] else 0.60,
-            uncertainty=0.20
+            threat_confidence=ml_confidence,
+            uncertainty=round(pred.uncertainty, 4)
         )
         db.add(new_incident)
         db.commit()

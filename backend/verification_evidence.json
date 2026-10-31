@@ -1,0 +1,308 @@
+{
+  "task1": {
+    "incident_id": 71,
+    "incident_state": {
+      "title": "Dns Amplification Flood from 198.51.100.120",
+      "threat_type": "DNS_AMPLIFICATION_FLOOD",
+      "severity": "CRITICAL",
+      "source_ip": "198.51.100.120",
+      "destination_ip": "10.0.0.53",
+      "protocol": "UDP",
+      "id": 71,
+      "status": "PENDING_APPROVAL",
+      "threat_confidence": 0.6192,
+      "anomaly_score": 0.7979,
+      "is_anomaly": 1,
+      "uncertainty": 0.1014,
+      "assessment_notes": "Anomaly detected (Score: 0.80). Abnormal packet velocity (3200 pps).",
+      "selected_response_id": 164,
+      "autonomy_trust_score": 0.5,
+      "execution_mode": "HUMAN_APPROVAL",
+      "created_at": "2026-10-31T12:11:31.999023",
+      "updated_at": "2026-10-31T12:11:32.174098"
+    },
+    "candidates": [
+      {
+        "id": 163,
+        "incident_id": 71,
+        "action_type": "BLOCK_IP",
+        "target_ip": "198.51.100.120",
+        "parameters": {
+          "duration_sec": 600
+        },
+        "reliability_score": 0.5502,
+        "threat_confidence_score": 0.6192,
+        "historical_success_score": 0.0,
+        "policy_fit_score": 0.9,
+        "qos_risk_score": 0.4797,
+        "resource_risk_score": 0.05,
+        "uncertainty_score": 0.1014,
+        "score_breakdown": {
+          "threat_confidence_term": 0.1548,
+          "historical_success_term": 0.0,
+          "policy_fit_term": 0.18,
+          "qos_risk_penalty": 0.072,
+          "resource_risk_penalty": 0.0025,
+          "uncertainty_penalty": 0.0101,
+          "raw_score": 0.2502,
+          "normalized_score": 0.5502
+        },
+        "explanation": "Past deployment failures for this action reduced reliability. High collateral QoS impact risk (48%) penalizes reliability. Policy: Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous BLOCK_IP is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization. Autonomy: Mandatory safety policy override triggered escalation. SOC analyst approval is required despite trust score (0.42).",
+        "policy_status": "ESCALATE",
+        "policy_reason": "Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous BLOCK_IP is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization.",
+        "trust_score": 0.4223,
+        "recommended_mode": "HUMAN_APPROVAL",
+        "candidate_status": "READY",
+        "created_at": "2026-10-31T12:11:32.098587"
+      },
+      {
+        "id": 164,
+        "incident_id": 71,
+        "action_type": "RATE_LIMIT",
+        "target_ip": "198.51.100.120",
+        "parameters": {
+          "rate_kbps": 250,
+          "duration_sec": 300
+        },
+        "reliability_score": 0.8068,
+        "threat_confidence_score": 0.6192,
+        "historical_success_score": 0.75,
+        "policy_fit_score": 0.95,
+        "qos_risk_score": 0.08595,
+        "resource_risk_score": 0.05,
+        "uncertainty_score": 0.1014,
+        "score_breakdown": {
+          "threat_confidence_term": 0.1548,
+          "historical_success_term": 0.1875,
+          "policy_fit_term": 0.19,
+          "qos_risk_penalty": 0.0129,
+          "resource_risk_penalty": 0.0025,
+          "uncertainty_penalty": 0.0101,
+          "raw_score": 0.5068,
+          "normalized_score": 0.8068
+        },
+        "explanation": "Historical track record is favorable (75% success). Policy: Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous RATE_LIMIT is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization. Autonomy: Mandatory safety policy override triggered escalation. SOC analyst approval is required despite trust score (0.50).",
+        "policy_status": "ESCALATE",
+        "policy_reason": "Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous RATE_LIMIT is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization.",
+        "trust_score": 0.5,
+        "recommended_mode": "HUMAN_APPROVAL",
+        "candidate_status": "PENDING_APPROVAL",
+        "created_at": "2026-10-31T12:11:32.122417"
+      },
+      {
+        "id": 165,
+        "incident_id": 71,
+        "action_type": "ISOLATE_HOST",
+        "target_ip": "198.51.100.120",
+        "parameters": {
+          "isolation_level": "FULL"
+        },
+        "reliability_score": 0.5022,
+        "threat_confidence_score": 0.6192,
+        "historical_success_score": 0.7,
+        "policy_fit_score": 0.4,
+        "qos_risk_score": 0.85,
+        "resource_risk_score": 0.2,
+        "uncertainty_score": 0.1014,
+        "score_breakdown": {
+          "threat_confidence_term": 0.1548,
+          "historical_success_term": 0.125,
+          "policy_fit_term": 0.08,
+          "qos_risk_penalty": 0.1275,
+          "resource_risk_penalty": 0.01,
+          "uncertainty_penalty": 0.0201,
+          "raw_score": 0.2022,
+          "normalized_score": 0.5022
+        },
+        "explanation": "No prior incident history; evaluated with uninformative prior. High collateral QoS impact risk (85%) penalizes reliability. Policy: Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous ISOLATE_HOST is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization. Policy 'Protect Critical Asset From Autonomous Isolation' enforced: ESCALATE. Autonomy: Mandatory safety policy override triggered escalation. SOC analyst approval is required despite trust score (0.43).",
+        "policy_status": "ESCALATE",
+        "policy_reason": "Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous ISOLATE_HOST is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization. Policy 'Protect Critical Asset From Autonomous Isolation' enforced: ESCALATE.",
+        "trust_score": 0.4307,
+        "recommended_mode": "HUMAN_APPROVAL",
+        "candidate_status": "READY",
+        "created_at": "2026-10-31T12:11:32.143769"
+      }
+    ],
+    "checks": {
+      "candidate_count": 3,
+      "all_policy_status_escalate": true,
+      "all_mode_human_approval": true,
+      "selected_response_id": 164,
+      "incident_status_pending_approval": true,
+      "has_score_breakdowns": true,
+      "has_explanations": true
+    }
+  },
+  "task2_rejection": {
+    "incident_id": 72,
+    "approval_id": 38,
+    "approval_response": {
+      "id": 38,
+      "incident_id": 72,
+      "candidate_response_id": 167,
+      "status": "REJECTED",
+      "action_type": "RATE_LIMIT",
+      "target_ip": "198.51.100.121",
+      "threat_type": "DNS_AMPLIFICATION_FLOOD",
+      "trust_score": 0.5,
+      "reliability_score": 0.7343,
+      "policy_decision": "ESCALATE",
+      "escalation_reason": "Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous RATE_LIMIT is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization.",
+      "operator_username": "analyst",
+      "operator_comment": "SOC Analyst rejected: high collateral risk during DNS maintenance window.",
+      "requested_at": "2026-10-31T12:11:32.374226",
+      "decided_at": "2026-10-31T12:11:32.421738"
+    },
+    "incident_status": "REJECTED",
+    "candidate_status": "REJECTED",
+    "exec_blocked_status_code": 403,
+    "exec_blocked_detail": "Action 'RATE_LIMIT' was REJECTED by human operator and cannot be executed.",
+    "audit_logged": true
+  },
+  "task2_approval": {
+    "incident_id": 73,
+    "approval_id": 39,
+    "approval_response": {
+      "id": 39,
+      "incident_id": 73,
+      "candidate_response_id": 170,
+      "status": "APPROVED",
+      "action_type": "RATE_LIMIT",
+      "target_ip": "198.51.100.122",
+      "threat_type": "DNS_AMPLIFICATION_FLOOD",
+      "trust_score": 0.5,
+      "reliability_score": 0.7343,
+      "policy_decision": "ESCALATE",
+      "escalation_reason": "Target hosts critical service 'DNS Resolver' with strict SLA sensitivity (95%). Autonomous RATE_LIMIT is prohibited by mandatory safety policy to prevent service interruption; requires explicit human authorization.",
+      "operator_username": "analyst",
+      "operator_comment": "SOC Lead authorized: RATE_LIMIT 250 kbps approved for mitigated traffic.",
+      "requested_at": "2026-10-31T12:11:32.638582",
+      "decided_at": "2026-10-31T12:11:32.675331"
+    },
+    "incident_status": "READY_TO_EXECUTE",
+    "incident_execution_mode": "HUMAN_APPROVED"
+  },
+  "task3": {
+    "unauthorized_incident_id": 74,
+    "unauthorized_status_code": 403,
+    "unauthorized_detail": "Action 'BLOCK_IP' requires human operator approval before execution.",
+    "authorized_incident_id": 73,
+    "authorized_execution": {
+      "incident_id": 73,
+      "execution": {
+        "id": 29,
+        "action_type": "RATE_LIMIT",
+        "target_ip": "198.51.100.122",
+        "adapter": "MOCK",
+        "rule_id": "meter_2d34a378",
+        "status": "SUCCESS"
+      },
+      "outcome": {
+        "mitigation_pct": 98.0,
+        "qos_impact_pct": 6.25,
+        "composite_score": 0.9651,
+        "status": "SUCCESS",
+        "explanation": "Response successful: 98.0% attack mitigation with minimal QoS degradation (6.2%)."
+      }
+    },
+    "executed_candidate_status": "EXECUTED",
+    "other_candidates_statuses": [
+      "NOT_SELECTED",
+      "NOT_SELECTED"
+    ]
+  },
+  "task4": {
+    "incident_id": 73,
+    "pre_telemetry": {
+      "attack_pps": 2500.0,
+      "throughput_mbps": 95.0,
+      "latency_ms": 1.2,
+      "packet_loss_pct": 0.1
+    },
+    "post_telemetry": {
+      "attack_pps": 50.0,
+      "throughput_mbps": 94.0,
+      "latency_ms": 1.35,
+      "packet_loss_pct": 0.2
+    },
+    "metrics": {
+      "actual_attack_reduction_pct": 98.0,
+      "actual_qos_impact_pct": 6.25,
+      "mitigation_effectiveness": 0.98,
+      "collateral_impact": 0.0625,
+      "composite_success_score": 0.9651,
+      "success_status": "SUCCESS",
+      "explanation": "Response successful: 98.0% attack mitigation with minimal QoS degradation (6.2%)."
+    }
+  },
+  "task5": {
+    "persisted_incident": {
+      "id": 73,
+      "status": "COMPLETED",
+      "mode": "HUMAN_APPROVED"
+    },
+    "persisted_approval": {
+      "id": 39,
+      "status": "APPROVED",
+      "operator": "analyst"
+    },
+    "persisted_execution": {
+      "id": 29,
+      "rule_id": "meter_2d34a378",
+      "status": "SUCCESS"
+    },
+    "persisted_outcome": {
+      "id": 29,
+      "status": "SUCCESS",
+      "composite": 0.9651
+    },
+    "persisted_candidate": {
+      "id": 170,
+      "status": "EXECUTED"
+    }
+  },
+  "task6": {
+    "incident_id": 73,
+    "total_experience_records": 10,
+    "similar_records_count": 10,
+    "recorded_experience": {
+      "id": 29,
+      "incident_id": 73,
+      "threat_type": "DNS_AMPLIFICATION_FLOOD",
+      "source_ip": "198.51.100.122",
+      "destination_ip": "10.0.0.53",
+      "network_context": {
+        "criticality": "HIGH",
+        "target_ip": "10.0.0.53"
+      },
+      "threat_confidence": 0.4451,
+      "selected_action": "RATE_LIMIT",
+      "parameters": {
+        "rate_kbps": 250,
+        "duration_sec": 300
+      },
+      "reliability_score": 0.7343,
+      "trust_score": 0.5,
+      "execution_mode": "HUMAN_APPROVAL",
+      "predicted_outcome": {
+        "expected_reduction": 85.0
+      },
+      "actual_outcome": {
+        "actual_reduction": 98.0,
+        "classification": "SUCCESS"
+      },
+      "qos_impact": 0.0625,
+      "human_override": true,
+      "final_success": true,
+      "adaptation_weight_delta": 0.0,
+      "created_at": "2026-10-31T12:11:32.914326"
+    },
+    "checks": {
+      "final_success": true,
+      "threat_type": "DNS_AMPLIFICATION_FLOOD",
+      "selected_action": "RATE_LIMIT",
+      "human_override": true,
+      "has_adaptation_weight_delta": true
+    }
+  }
+}

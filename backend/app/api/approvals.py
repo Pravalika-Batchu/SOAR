@@ -76,12 +76,13 @@ def approve_response(
     db.commit()
     db.refresh(approval)
 
-    # Auto-execute the approved action on the network adapter
-    try:
-        orchestrator_service.execute_incident_response(approval.incident_id, approval.candidate_response_id, db)
-    except Exception as e:
-        # If execution fails, state remains logged
-        pass
+    # Auto-execute the approved action on the network adapter if auto_execute is True (default)
+    if request.auto_execute:
+        try:
+            orchestrator_service.execute_incident_response(approval.incident_id, approval.candidate_response_id, db)
+        except Exception as e:
+            # If execution fails, state remains logged
+            pass
 
     return approval
 

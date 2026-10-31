@@ -11,6 +11,7 @@ import { OutcomeEvaluationView } from './pages/OutcomeEvaluationView';
 import { ExperienceMemoryView } from './pages/ExperienceMemoryView';
 import { PolicyManagement } from './pages/PolicyManagement';
 import { NetworkTopologyView } from './pages/NetworkTopologyView';
+import { SimulationControl } from './pages/SimulationControl';
 
 import { api } from './services/api';
 import { MetricsSummary, SystemStatus, SecurityAlert, Incident } from './types';
@@ -52,71 +53,37 @@ export const App: React.FC = () => {
   }, []);
 
   const handleTriggerScenario = async (scenario: string) => {
-    let payload: Partial<SecurityAlert> = {};
-    if (scenario === 'DOS') {
-      payload = {
-        source: 'SURICATA',
-        alert_type: 'DOS_SYN_FLOOD',
-        severity: 'HIGH',
-        source_ip: '10.0.0.99',
-        destination_ip: '10.0.0.10',
-        destination_port: 80,
-        protocol: 'TCP',
-        signature: 'ET DOS Potential SYN Flood on HTTP Web Server'
-      };
-    } else if (scenario === 'PORT_SCAN') {
-      payload = {
-        source: 'ZEEK',
-        alert_type: 'PORT_SCAN',
-        severity: 'MEDIUM',
-        source_ip: '10.0.0.99',
-        destination_ip: '10.0.0.101',
-        destination_port: 0,
-        protocol: 'TCP',
-        signature: 'Zeek Port Sweep Detection (SYN scan 100+ ports)'
-      };
-    } else if (scenario === 'BRUTE_FORCE') {
-      payload = {
-        source: 'SURICATA',
-        alert_type: 'BRUTE_FORCE',
-        severity: 'HIGH',
-        source_ip: '10.0.0.99',
-        destination_ip: '10.0.0.20',
-        destination_port: 22,
-        protocol: 'TCP',
-        signature: 'ET SCAN Potential SSH Brute Force Authentication'
-      };
-    } else if (scenario === 'UNKNOWN') {
-      payload = {
-        source: 'TEST_GENERATOR',
-        alert_type: 'UNKNOWN_ANOMALY',
-        severity: 'MEDIUM',
-        source_ip: '10.0.0.99',
-        destination_ip: '10.0.0.102',
-        destination_port: 4444,
-        protocol: 'UDP',
-        signature: 'Statistical Out-of-Distribution Packet Velocity Spike'
-      };
-    } else if (scenario === 'QOS_SENSITIVE') {
-      payload = {
-        source: 'SURICATA',
-        alert_type: 'DOS_SYN_FLOOD',
-        severity: 'HIGH',
-        source_ip: '10.0.0.99',
-        destination_ip: '10.0.0.53',
-        destination_port: 53,
-        protocol: 'UDP',
-        signature: 'ET DOS DNS Amplification Flood Targeting Critical Core DNS'
-      };
-    }
+    const attackMap: Record<string, string> = {
+      'DOS': 'DOS_SYN_FLOOD',
+      'PORT_SCAN': 'PORT_SCAN',
+      'BRUTE_FORCE': 'BRUTE_FORCE',
+      'UNKNOWN': 'UNKNOWN_ANOMALY',
+      'QOS_SENSITIVE': 'DNS_AMPLIFICATION_FLOOD',
+    };
+
+    const attackType = attackMap[scenario];
+    if (!attackType) return;
 
     try {
-      const createdAlert = await api.createAlert(payload);
+      await fetch('/api/simulation/start', { method: 'POST' });
+      await fetch(`/api/simulation/trigger/${attackType}?duration_cycles=2`, { method: 'POST' });
+
+      // Poll slightly after attack generation to catch the dynamic incident
+      setTimeout(async () => {
+        await fetchGlobalData();
+        try {
+          const incRes = await fetch('/api/incidents?limit=5');
+          const incs = await incRes.json();
+          if (incs.length > 0) {
+            setSelectedIncidentId(incs[0].id);
+            setActivePage('incidents');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }, 1500);
+
       await fetchGlobalData();
-      if (createdAlert.incident_id) {
-        setSelectedIncidentId(createdAlert.incident_id);
-        setActivePage('incidents');
-      }
     } catch (e) {
       console.error(e);
     }
@@ -206,6 +173,8 @@ export const App: React.FC = () => {
           {activePage === 'policies' && <PolicyManagement />}
 
           {activePage === 'topology' && <NetworkTopologyView />}
+
+          {activePage === 'simulation' && <SimulationControl />}
         </main>
       </div>
     </div>

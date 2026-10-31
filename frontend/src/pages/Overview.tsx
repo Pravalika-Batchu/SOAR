@@ -192,41 +192,43 @@ export const Overview: React.FC<OverviewProps> = ({
           <div>
             <h3 className="text-sm font-semibold text-white flex items-center justify-between">
               <span>Network Telemetry & QoS</span>
-              <span className="text-xs text-emerald-400 font-medium">● Normal Nominal</span>
+              <span className={`text-xs font-medium ${(metrics?.current_packet_loss_pct || 0) > 2.0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                ● {(metrics?.current_packet_loss_pct || 0) > 2.0 ? 'Degraded' : 'Normal Nominal'}
+              </span>
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">Live OpenFlow virtual switch datapath metrics</p>
+            <p className="text-xs text-slate-500 mt-0.5">Live simulated network datapath metrics</p>
           </div>
           <div className="space-y-4 my-auto py-2">
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-400">Throughput Capacity (94.2 Mbps / 100 Mbps)</span>
-                <span className="text-emerald-400 font-semibold">94.2%</span>
+                <span className="text-slate-400">Throughput ({(metrics?.current_throughput_mbps || 94.2).toFixed(1)} Mbps / 100 Mbps)</span>
+                <span className="text-emerald-400 font-semibold">{(metrics?.current_throughput_mbps || 94.2).toFixed(1)}%</span>
               </div>
               <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-emerald-500 h-full rounded-full" style={{ width: '94.2%' }} />
+                <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, metrics?.current_throughput_mbps || 94.2)}%` }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-400">Switch Latency (1.25 ms / 15.0 ms max)</span>
-                <span className="text-cyan-400 font-semibold">1.25 ms</span>
+                <span className="text-slate-400">Switch Latency ({(metrics?.current_latency_ms || 1.25).toFixed(2)} ms / 15.0 ms max)</span>
+                <span className="text-cyan-400 font-semibold">{(metrics?.current_latency_ms || 1.25).toFixed(2)} ms</span>
               </div>
               <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-cyan-500 h-full rounded-full" style={{ width: '12%' }} />
+                <div className="bg-cyan-500 h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, ((metrics?.current_latency_ms || 1.25) / 15.0) * 100)}%` }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-400">Packet Loss Margin (0.10% / 2.0% max)</span>
-                <span className="text-blue-400 font-semibold">0.10%</span>
+                <span className="text-slate-400">Packet Loss ({(metrics?.current_packet_loss_pct || 0.1).toFixed(2)}% / 2.0% max)</span>
+                <span className={`font-semibold ${(metrics?.current_packet_loss_pct || 0) > 1.5 ? 'text-rose-400' : 'text-blue-400'}`}>{(metrics?.current_packet_loss_pct || 0.1).toFixed(2)}%</span>
               </div>
               <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-full rounded-full" style={{ width: '5%' }} />
+                <div className={`h-full rounded-full transition-all duration-500 ${(metrics?.current_packet_loss_pct || 0) > 1.5 ? 'bg-rose-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(100, ((metrics?.current_packet_loss_pct || 0.1) / 2.0) * 100)}%` }} />
               </div>
             </div>
           </div>
           <div className="text-[11px] text-slate-500 border-t border-slate-800 pt-2">
-            Telemetry collected via OpenFlow flow statistics and iPerf3 virtual agent.
+            Simulated via network_simulator.py — updates every 5s
           </div>
         </div>
 
